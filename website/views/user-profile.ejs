@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | MMU Hospital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#7c3aed',
+                        accent: '#c084fc',
+                        dark: '#111827'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 font-sans">
+    <!-- Top navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div class="flex justify-between items-center px-4 py-3">
+            <div class="flex items-center md:w-64">
+                <button id="mobile-menu-button" class="md:hidden mr-3 text-slate-500 hover:text-primary">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <a href="/dashboard" class="flex items-center gap-2 text-primary font-bold text-xl">
+                    <i class="fas fa-heartbeat"></i>
+                    <span class="hidden md:inline">MMU Hospital</span>
+                </a>
+            </div>
+            
+            <div class="flex items-center">
+                <a href="/profile" class="flex items-center gap-2 text-slate-600 hover:text-primary px-3 py-2">
+                    <div class="relative">
+                        <i class="fas fa-user-circle text-xl"></i>
+                        <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    <span class="hidden md:inline font-medium"><%= user.username %></span>
+                </a>
+                
+                <a href="/logout" class="text-slate-600 hover:text-primary px-3 py-2">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="fixed z-20 h-screen w-64 bg-white border-r border-slate-200 transform -translate-x-full md:translate-x-0 transition-transform duration-300">
+            <div class="h-full flex flex-col py-6 overflow-y-auto">
+                <div class="px-4 mb-6">
+                    <div class="bg-primary/10 rounded-lg p-3 text-center">
+                        <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-primary text-white mb-2">
+                            <%= user.role.charAt(0).toUpperCase() %>
+                        </span>
+                        <p class="text-sm font-medium text-primary">
+                            <%= user.role.charAt(0).toUpperCase() + user.role.slice(1) %>
+                        </p>
+                    </div>
+                </div>
+                
+                <nav class="px-3 space-y-1">
+                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2">Main</div>
+                    <a href="/dashboard" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                        <i class="fas fa-tachometer-alt w-5 text-center"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    
+                    <% if (user.role === 'admin') { %>
+                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2 mt-6">Administration</div>
+                        <a href="/create-doctor" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                            <i class="fas fa-user-md w-5 text-center"></i>
+                            <span>Create Doctor</span>
+                        </a>
+                        <a href="/doctors" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                            <i class="fas fa-stethoscope w-5 text-center"></i>
+                            <span>Doctors List</span>
+                        </a>
+                        <a href="/create-patient" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                            <i class="fas fa-user-plus w-5 text-center"></i>
+                            <span>Create Patient</span>
+                        </a>
+                    <% } %>
+                    
+                    <% if (user.role === 'doctor' || user.role === 'admin') { %>
+                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2 mt-6">Patients</div>
+                        <a href="/patients" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                            <i class="fas fa-users w-5 text-center"></i>
+                            <span>Patients List</span>
+                        </a>
+                    <% } %>
+                    
+                    <% if (user.role === 'doctor') { %>
+                        <a href="/add-record" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                            <i class="fas fa-notes-medical w-5 text-center"></i>
+                            <span>Add Medical Record</span>
+                        </a>
+                    <% } %>
+                    
+                    <% if (user.role === 'patient') { %>
+                        <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2 mt-6">Medical Records</div>
+                        <a href="/my-records" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                            <i class="fas fa-file-medical w-5 text-center"></i>
+                            <span>My Medical Records</span>
+                        </a>
+                    <% } %>
+                    
+                    <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider px-3 mb-2 mt-6">Account</div>
+                    <a href="/profile" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                        <i class="fas fa-user-circle w-5 text-center"></i>
+                        <span>Profile</span>
+                    </a>
+                </nav>
+                
+                <div class="mt-auto px-4">
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-4 text-white shadow-lg">
+                        <h4 class="font-medium mb-2">Blockchain Status</h4>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="flex-shrink-0 w-2 h-2 rounded-full bg-green-300"></span>
+                            <span>Network Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main content -->
+        <main class="flex-1 md:ml-64 px-4 py-8 bg-slate-50">
+            <div class="container mx-auto max-w-4xl">
+                <!-- Page header -->
+                <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <% if (profile.role === 'admin') { %>
+                                <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Admin</span>
+                            <% } else if (profile.role === 'doctor') { %>
+                                <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">Doctor</span>
+                            <% } else { %>
+                                <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Patient</span>
+                            <% } %>
+                            <h1 class="text-2xl font-bold text-slate-800"><%= profile.name %>'s Profile</h1>
+                        </div>
+                        <p class="text-slate-500 mt-1">User details and information</p>
+                    </div>
+                    
+                    <!-- Back button -->
+                    <div>
+                        <% if (profile.role === 'doctor') { %>
+                            <a href="/doctors" class="inline-flex items-center gap-2 text-slate-600 hover:text-primary">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Back to Doctors List</span>
+                            </a>
+                        <% } else if (profile.role === 'patient') { %>
+                            <a href="/patients" class="inline-flex items-center gap-2 text-slate-600 hover:text-primary">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Back to Patients List</span>
+                            </a>
+                        <% } else { %>
+                            <a href="/dashboard" class="inline-flex items-center gap-2 text-slate-600 hover:text-primary">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Back to Dashboard</span>
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+                
+                <!-- User profile card -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+                    <div class="bg-gradient-to-r from-primary to-secondary px-6 py-4">
+                        <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                            <% if (profile.role === 'doctor') { %>
+                                <i class="fas fa-user-md"></i> Doctor Information
+                            <% } else if (profile.role === 'patient') { %>
+                                <i class="fas fa-user"></i> Patient Information
+                            <% } else { %>
+                                <i class="fas fa-user-shield"></i> Admin Information
+                            <% } %>
+                        </h2>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <!-- Avatar & basic info -->
+                            <div class="flex flex-col items-center md:items-start">
+                                <div class="w-32 h-32 rounded-full bg-primary/10 flex items-center justify-center text-primary text-5xl mb-4">
+                                    <% if (profile.role === 'doctor') { %>
+                                        <i class="fas fa-user-md"></i>
+                                    <% } else if (profile.role === 'patient') { %>
+                                        <i class="fas fa-user"></i>
+                                    <% } else { %>
+                                        <i class="fas fa-user-shield"></i>
+                                    <% } %>
+                                </div>
+                                
+                                <h3 class="text-xl font-semibold text-slate-800 text-center"><%= profile.name %></h3>
+                                <p class="text-slate-500 mb-4 text-center">
+                                    <% if (profile.role === 'doctor') { %>
+                                        <%= profile.specialization %>
+                                    <% } else if (profile.role === 'patient') { %>
+                                        Patient
+                                    <% } else { %>
+                                        System Administrator
+                                    <% } %>
+                                </p>
+                            </div>
+                            
+                            <!-- User details -->
+                            <div class="flex-1 mt-4 md:mt-0">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                                    <div>
+                                        <h4 class="text-sm text-slate-500 font-medium mb-1">User ID</h4>
+                                        <p class="text-slate-800 bg-slate-50 p-2 rounded-md"><%= profile.id %></p>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm text-slate-500 font-medium mb-1">Username</h4>
+                                        <p class="text-slate-800 bg-slate-50 p-2 rounded-md"><%= userAccount ? userAccount.username : 'N/A' %></p>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm text-slate-500 font-medium mb-1">Contact</h4>
+                                        <p class="text-slate-800 bg-slate-50 p-2 rounded-md"><%= profile.contact || 'N/A' %></p>
+                                    </div>
+                                    
+                                    <div>
+                                        <h4 class="text-sm text-slate-500 font-medium mb-1">Created On</h4>
+                                        <p class="text-slate-800 bg-slate-50 p-2 rounded-md"><%= new Date(profile.createdAt).toLocaleDateString() %></p>
+                                    </div>
+                                    
+                                    <% if (profile.role === 'patient') { %>
+                                        <div>
+                                            <h4 class="text-sm text-slate-500 font-medium mb-1">Date of Birth</h4>
+                                            <p class="text-slate-800 bg-slate-50 p-2 rounded-md"><%= profile.dateOfBirth || 'N/A' %></p>
+                                        </div>
+                                        
+                                        <div class="md:col-span-2">
+                                            <h4 class="text-sm text-slate-500 font-medium mb-1">Address</h4>
+                                            <p class="text-slate-800 bg-slate-50 p-2 rounded-md"><%= profile.address || 'N/A' %></p>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <% if (profile.role === 'patient' && medicalRecords && medicalRecords.length > 0) { %>
+                    <!-- Patient medical records section -->
+                    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+                        <div class="bg-gradient-to-r from-primary to-secondary px-6 py-4">
+                            <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                                <i class="fas fa-file-medical"></i> Medical Records
+                            </h2>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="space-y-6">
+                                <% medicalRecords.forEach(record => { %>
+                                    <div class="border border-slate-200 rounded-lg overflow-hidden">
+                                        <div class="bg-slate-50 px-4 py-3 border-b border-slate-200 flex justify-between items-center">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-calendar-alt text-primary"></i>
+                                                <span class="font-medium text-slate-700"><%= record.diagnosisDate %></span>
+                                            </div>
+                                            <span class="px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
+                                                ID: <%= record.id %>
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="p-4">
+                                            <h3 class="text-lg font-semibold text-slate-800 mb-3">
+                                                <i class="fas fa-stethoscope text-primary mr-2"></i>
+                                                <%= record.diagnosis %>
+                                            </h3>
+                                            
+                                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-slate-500 mb-1">Treatment</h4>
+                                                    <p class="text-slate-700"><%= record.treatment %></p>
+                                                </div>
+                                                
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-slate-500 mb-1">Medications</h4>
+                                                    <p class="text-slate-700"><%= record.medications %></p>
+                                                </div>
+                                            </div>
+                                            
+                                            <% if (record.notes) { %>
+                                                <div>
+                                                    <h4 class="text-sm font-medium text-slate-500 mb-1">Notes</h4>
+                                                    <p class="text-slate-700"><%= record.notes %></p>
+                                                </div>
+                                            <% } %>
+                                            
+                                            <div class="mt-3 pt-3 border-t border-slate-100 text-sm text-slate-500">
+                                                <div class="flex justify-between">
+                                                    <span>Doctor: <%= record.doctorId %></span>
+                                                    <span>Created: <%= new Date(record.timestamp).toLocaleString() %></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            </div>
+                        </div>
+                    </div>
+                <% } else if (profile.role === 'patient') { %>
+                    <div class="bg-indigo-50 border-l-4 border-primary text-slate-700 p-6 rounded-lg mb-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0 text-primary mr-4">
+                                <i class="fas fa-info-circle text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold">No medical records found</h3>
+                                <p class="text-sm mt-1">This patient doesn't have any medical records yet.</p>
+                            </div>
+                        </div>
+                        
+                        <% if (user.role === 'doctor') { %>
+                            <div class="mt-4">
+                                <a href="/add-record/<%= profile.id %>" class="inline-flex items-center gap-2 text-primary hover:text-indigo-700">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Add medical record</span>
+                                </a>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+                
+                <!-- Action buttons -->
+                <div class="flex flex-wrap gap-3 justify-end">
+                    <% if (user.role === 'admin') { %>
+                        <button class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg flex items-center gap-2 transition-colors">
+                            <i class="fas fa-key"></i>
+                            <span>Reset Password</span>
+                        </button>
+                        
+                        <% if (profile.role === 'patient') { %>
+                            <a href="/patient-records/<%= profile.id %>" class="px-4 py-2 bg-primary hover:bg-indigo-700 text-white rounded-lg flex items-center gap-2 transition-colors">
+                                <i class="fas fa-clipboard-list"></i>
+                                <span>View Medical Records</span>
+                            </a>
+                        <% } %>
+                    <% } %>
+                    
+                    <% if (user.role === 'doctor' && profile.role === 'patient') { %>
+                        <a href="/add-record/<%= profile.id %>" class="px-4 py-2 bg-primary hover:bg-indigo-700 text-white rounded-lg flex items-center gap-2 transition-colors">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Medical Record</span>
+                        </a>
+                    <% } %>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Backdrop for mobile menu -->
+    <div id="backdrop" class="fixed inset-0 bg-slate-900/50 z-10 hidden md:hidden"></div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const backdrop = document.getElementById('backdrop');
+            
+            function toggleMobileMenu() {
+                sidebar.classList.toggle('-translate-x-full');
+                backdrop.classList.toggle('hidden');
+            }
+            
+            mobileMenuButton.addEventListener('click', toggleMobileMenu);
+            backdrop.addEventListener('click', toggleMobileMenu);
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,27 @@
+{
+  "name": "medical-management-chaincode",
+  "version": "1.0.0",
+  "description": "Hyperledger Fabric chaincode for medical record management",
+  "main": "index.js",
+  "engines": {
+    "node": ">=16.0.0 <17.0.0",
+    "npm": ">=8.0.0"
+  },
+  "scripts": {
+    "start": "fabric-chaincode-node start"
+  },
+  "keywords": [
+    "hyperledger",
+    "fabric",
+    "blockchain",
+    "medical",
+    "chaincode",
+    "contract"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "fabric-contract-api": "2.4.1",
+    "fabric-shim": "2.4.1"
+  }
+} 

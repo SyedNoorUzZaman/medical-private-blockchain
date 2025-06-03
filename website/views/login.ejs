@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#7c3aed',
+                        accent: '#c084fc',
+                        dark: '#111827'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 font-sans">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <!-- Logo and back to home link -->
+            <div class="text-center mb-6">
+                <a href="/" class="inline-flex items-center gap-2 text-primary hover:text-indigo-700 transition-colors">
+                    <i class="fas fa-chevron-left"></i>
+                    <span>Back to home</span>
+                </a>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <!-- Header with gradient -->
+                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-10 text-center">
+                    <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white mb-6">
+                        <i class="fas fa-heartbeat text-4xl text-primary"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">MMU Hospital Login</h2>
+                    <p class="text-indigo-100 mt-2">Blockchain Powered Health Records</p>
+                </div>
+                
+                <!-- Login form -->
+                <div class="p-8">
+                    <% if (error) { %>
+                        <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md" role="alert">
+                            <div class="flex items-center gap-2">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span><%= error %></span>
+                            </div>
+                        </div>
+                    <% } %>
+                    
+                    <form action="/login" method="POST">
+                        <div class="space-y-6">
+                            <div>
+                                <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                    <input type="text" id="username" name="username" required 
+                                        class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary focus:border-primary block p-3 transition-all" 
+                                        placeholder="Enter your username">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-gray-400"></i>
+                                    </div>
+                                    <input type="password" id="password" name="password" required 
+                                        class="pl-10 w-full bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary focus:border-primary block p-3 transition-all" 
+                                        placeholder="Enter your password">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <button type="submit" 
+                                    class="w-full flex justify-center items-center bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all shadow-md hover:shadow-lg">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>
+                                    Login
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <p class="text-center text-sm text-gray-600">
+                            This secure login is protected by blockchain technology and advanced cryptography.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="text-center mt-8 text-sm text-gray-500">
+                <p>&copy; 2023 MMU Hospital - All rights reserved</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
